@@ -13,7 +13,7 @@ function setup() {
     video = createCapture(VIDEO);
     video.hide();
     poseNet = ml5.poseNet(video, modelLoaded);
-    poseNet.on('pose', gotposes);
+    poseNet.on('pose', gotPoses);
 }
 
 function preload() {
@@ -32,7 +32,7 @@ function draw() {
         Harry_potter_theme_song.stop();
         if (song_name == false) {
             Peter_pan_song.play();
-        } 
+        }
         else {
             console.log("Song Name: Peter Pan Song");
             document.getElementById("song_id").innerHTML = "Song Name: Peter Pan Song";
