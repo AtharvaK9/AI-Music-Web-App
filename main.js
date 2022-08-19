@@ -1,59 +1,95 @@
 Peter_pan_song = "";
 Harry_potter_theme_song = "";
-rightWristX = 0;
-rightWristY = 0;
-leftWristX = 0;
-leftWristY = 0;
+
+rightWrist_x = 0;
+rightWrist_y = 0;
+leftWrist_x = 0;
+leftWrist_y = 0;
+
 scoreleftWrist = 0;
-song_name = "";
+scorerightWrist = 0;
+
+song_Peter_pan = "";
+song_Harry_potter_theme = "";
 
 function setup() {
     canvas = createCanvas(600, 530);
     canvas.center();
+
     video = createCapture(VIDEO);
     video.hide();
+
     poseNet = ml5.poseNet(video, modelLoaded);
-    poseNet.on('pose', gotPoses);
+    poseNet.on('pose', gotposes);
 }
 
 function preload() {
-    Harry_potter_theme_song = loadSound("music.mp3");
     Peter_pan_song = loadSound("music2.mp3");
+    Harry_potter_theme_song = loadSound("music.mp3");
 }
 
 function draw() {
     image(video, 0, 0, 600, 530);
+
     fill("#00ff00");
     stroke("#ff0000");
-    song_name = Peter_pan_song.isPlaying();
-    console.log(song_name);
+
+    song_Peter_pan = Peter_pan_song.isPlaying();
+    console.log(song_Peter_pan);
+
+    song_Harry_potter_theme = Harry_potter_theme_song.isPlaying();
+    console.log(song_Harry_potter_theme);
+
     if (scoreleftWrist > 0.2) {
-        circle(leftWristX, leftWristY, 20);
+
+        circle(leftWrist_x, leftWrist_y, 20);
+
         Harry_potter_theme_song.stop();
-        if (song_name == false) {
+
+        if (song_Peter_pan == false) {
             Peter_pan_song.play();
-        }
-        else {
+        } else {
             console.log("Song Name: Peter Pan Song");
             document.getElementById("song_id").innerHTML = "Song Name: Peter Pan Song";
+        }
+    }
+
+    if (scorerightWrist > 0.2) {
+
+        circle(rightWrist_x, rightWrist_y, 20);
+
+        Peter_pan_song.stop();
+
+        if (song_Harry_potter_theme == false) {
+
+            Harry_potter_theme_song.play();
+        } else {
+            console.log("Song Name: Harry Potter Theme Song");
+            document.getElementById("song_id").innerHTML = "Song Name: Harry Potter Theme Song";
         }
     }
 }
 
 function modelLoaded() {
-    console.log("PoseNet Model Has Successfully Loaded!");
+    console.log("poseNet Is Initialized");
 }
 
-function gotPoses(results) {
+function gotposes(results) {
     if (results.length > 0) {
         console.log(results);
+
         scoreleftWrist = results[0].pose.keypoints[9].score;
         console.log(scoreleftWrist);
-        leftWristX = results[0].pose.leftWrist.x;
-        leftWristY = results[0].pose.leftWrist.y;
-        console.log("leftWristX = " + leftWristX + " leftWristY = " + leftWristY);
-        rightWristX = results[0].pose.rightWrist.x;
-        rightWristY = results[0].pose.rightWrist.y;
-        console.log("rightWristX = " + rightWristX + " rightWristY = " + rightWristY);
+
+        scorerightWrist = results[0].pose.keypoints[10].score;
+        console.log(scorerightWrist);
+
+        leftWrist_x = results[0].pose.leftWrist.x;
+        leftWrist_y = results[0].pose.leftWrist.y;
+        console.log("leftWrist_x = " + leftWrist_x + " leftWrist_y = " + leftWrist_y);
+
+        rightWrist_x = results[0].pose.rightWrist.x;
+        rightWrist_y = results[0].pose.rightWrist.y;
+        console.log("rightWrist_x = " + rightWrist_x + " rightWrist_y = " + rightWrist_y);
     }
 }
